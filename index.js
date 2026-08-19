@@ -17,13 +17,24 @@ async function getPlayers() {
     const playerImage = document.createElement("img");
     const detailsButton = document.createElement("button");
     const backButton = document.createElement("button");
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
     playerImage.src = players[i].imageUrl;
     playerName.textContent = players[i].name;
     detailsButton.textContent = "Details";
     playerCard.appendChild(playerImage);
     playerCard.appendChild(playerName);
     playerCard.appendChild(detailsButton);
+    playerCard.appendChild(deleteButton);
     app.appendChild(playerCard);
+    deleteButton.addEventListener("click", async function () {
+      console.log(players[i].id);
+      await fetch(API + "/players/" + players[i].id, {
+        method: "DELETE",
+      });
+      app.innerHTML = "";
+      await getPlayers();
+    });
     detailsButton.addEventListener("click", function () {
       console.log(players[i].name);
       app.innerHTML = "";
