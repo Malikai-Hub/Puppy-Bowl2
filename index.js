@@ -3,6 +3,8 @@ const BASE = "https://fsa-puppy-bowl.herokuapp.com/api";
 const COHORT = "/2606-Malikai"; // Make sure to change this!
 const API = BASE + COHORT;
 const app = document.querySelector("#app");
+const form = document.querySelector("#new-player-form");
+
 async function getPlayers() {
   const response = await fetch(API + "/players");
   const data = await response.json();
@@ -49,4 +51,26 @@ async function getPlayers() {
     console.log(players[i].name);
   }
 }
+form.addEventListener("submit", async function (event) {
+  event.preventDefault();
+  const nameInput = document.querySelector("#name");
+  const breedInput = document.querySelector("#breed");
+  const name = nameInput.value;
+  const breed = breedInput.value;
+  const newPlayer = {
+    name: name,
+    breed: breed,
+  };
+  await fetch(API + "/players", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newPlayer),
+  });
+  app.innerHTML = "";
+  await getPlayers();
+  nameInput.value = "";
+  breedInput.value = "";
+});
 getPlayers();
