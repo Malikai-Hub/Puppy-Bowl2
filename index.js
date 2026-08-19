@@ -9,12 +9,13 @@ async function getPlayers() {
   const players = data.data.players;
   for (let i = 0; i < players.length; i++) {
     const playerCard = document.createElement("div");
+    playerCard.classList.add("player-card");
     const playerName = document.createElement("p");
     const playerImage = document.createElement("img");
     playerImage.src = players[i].imageUrl;
     playerName.textContent = players[i].name;
-    playerCard.appendChild(playerName);
     playerCard.appendChild(playerImage);
+    playerCard.appendChild(playerName);
     app.appendChild(playerCard);
     console.log(players[i].name);
   }
