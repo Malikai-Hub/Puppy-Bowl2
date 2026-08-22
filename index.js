@@ -5,6 +5,9 @@ const API = BASE + COHORT;
 const app = document.querySelector("#app");
 const form = document.querySelector("#new-player-form");
 let teams = [];
+const selectMessage = document.createElement("p");
+selectMessage.textContent = "Select a puppy";
+app.appendChild(selectMessage);
 
 async function getPlayers() {
   const response = await fetch(API + "/players");
@@ -60,6 +63,16 @@ async function getPlayers() {
         detailsTeam.textContent = "Team: Unassigned";
       }
       app.appendChild(detailsTeam);
+      const removeButton = document.createElement("button");
+      removeButton.textContent = "Remove from roster";
+      app.appendChild(removeButton);
+      removeButton.addEventListener("click", async function () {
+        await fetch(API + "/players/" + players[i].id, {
+          method: "DELETE",
+        });
+        app.innerHTML = "";
+        await getPlayers();
+      });
       const detailsImage = document.createElement("img");
       detailsImage.classList.add("details-img");
       detailsImage.src = players[i].imageUrl;
