@@ -4,6 +4,7 @@ const COHORT = "/2606-Malikai"; // Make sure to change this!
 const API = BASE + COHORT;
 const app = document.querySelector("#app");
 const form = document.querySelector("#new-player-form");
+let teams = [];
 
 async function getPlayers() {
   const response = await fetch(API + "/players");
@@ -20,6 +21,7 @@ async function getPlayers() {
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
     playerImage.src = players[i].imageUrl;
+    playerImage.alt = players[i].name;
     playerName.textContent = players[i].name;
     detailsButton.textContent = "Details";
     playerCard.appendChild(playerImage);
@@ -40,13 +42,24 @@ async function getPlayers() {
       app.innerHTML = "";
       const detailsName = document.createElement("h2");
       detailsName.textContent = players[i].name;
+      const detailsId = document.createElement("p");
+      detailsId.textContent = players[i].id;
       app.appendChild(detailsName);
+      app.appendChild(detailsId);
       const detailsBreed = document.createElement("p");
       detailsBreed.textContent = players[i].breed;
       app.appendChild(detailsBreed);
       const detailsStatus = document.createElement("p");
       detailsStatus.textContent = players[i].status;
       app.appendChild(detailsStatus);
+      const detailsTeam = document.createElement("p");
+      const matchingTeam = teams.find((team) => team.id === players[i].teamId);
+      if (matchingTeam) {
+        detailsTeam.textContent = "Team: " + matchingTeam.name;
+      } else {
+        detailsTeam.textContent = "Team: Unassigned";
+      }
+      app.appendChild(detailsTeam);
       const detailsImage = document.createElement("img");
       detailsImage.classList.add("details-img");
       detailsImage.src = players[i].imageUrl;
@@ -59,9 +72,16 @@ async function getPlayers() {
       });
     });
 
-    console.log(players[i].name);
+    console.log(players[i]);
   }
 }
+async function getTeams() {
+  const response = await fetch(API + "/teams");
+  const data = await response.json();
+  teams = data.data.teams;
+  console.log(teams);
+}
+getTeams();
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
   const nameInput = document.querySelector("#name");
